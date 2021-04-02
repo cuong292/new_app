@@ -20,7 +20,7 @@
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
         <!-- For fragments -->
         <FrameLayout
-            android:id="@+id/frame"
+            android:id="@+id/container_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>
