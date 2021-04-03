@@ -10,7 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-class RetrofitBuilder {
+public class RetrofitBuilder {
     private static final OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
@@ -26,7 +26,7 @@ class RetrofitBuilder {
     public static AppService getServices() {
         if (appService == null) {
             OkHttpClient.Builder client = okHttpClient.newBuilder();
-            client.addInterceptor(new HttpLoggingInterceptor());
+            client.addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
             Retrofit mRetrofit = new Retrofit.Builder()
                     .client(client.build())
                     .baseUrl("https://newsapi.org/v2/")

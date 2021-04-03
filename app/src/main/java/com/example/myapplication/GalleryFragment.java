@@ -22,31 +22,32 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class FavoriteFragment extends Fragment implements PostAdapter.OnAction {
-    private RecyclerView galleryRv;
+public class GalleryFragment extends Fragment implements PostAdapter.OnAction {
+    private RecyclerView favoriteRv;
     private PostAdapter adapter;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.gallery_fragment, container, false);
+        return inflater.inflate(R.layout.favorite_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         Log.d("Favorite", "onViewCreated() called with: view = [" + view + "], savedInstanceState = [" + savedInstanceState + "]");
-        galleryRv = view.findViewById(R.id.post_rv);
+        favoriteRv = view.findViewById(R.id.post_rv);
         adapter = new PostAdapter(this);
-        galleryRv.setAdapter(adapter);
-        adapter.shouldShowDownload(false);
-        getLikedPost();
+        favoriteRv.setAdapter(adapter);
+        adapter.shouldShowDownload(true);
+        adapter.shouldShowFavorite(false);
+        getStoredPost();
     }
 
-    private void getLikedPost() {
+    private void getStoredPost() {
         new Thread(() -> {
-            List<Post> favorites = DatabaseHelper.getInstance().postDAO().getLikedPost();
-            ((Activity) getContext()).runOnUiThread(() -> adapter.updateData(favorites));
+            List<Post> storedPost = DatabaseHelper.getInstance().postDAO().getStoredPost();
+            ((Activity) getContext()).runOnUiThread(() -> adapter.updateData(storedPost));
         }).start();
     }
 
@@ -95,5 +96,4 @@ public class FavoriteFragment extends Fragment implements PostAdapter.OnAction {
             getActivity().startActivity(intent);
         }
     }
-
 }
