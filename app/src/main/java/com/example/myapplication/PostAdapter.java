@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
     private List<Post> posts = new ArrayList<>();
+    private List<Post> temp = new ArrayList<>();
     private OnAction onAction;
     private boolean shouldShowFavorite = true;
     private boolean shouldShowBookMark = true;
@@ -38,18 +39,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull PostViewHolder holder, int position) {
-        holder.bind(posts.get(position));
+        holder.bind(temp.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return posts.size();
+        return temp.size();
     }
 
     public void updateData(List<Post> posts) {
         if (posts == null) return;
         this.posts.clear();
         this.posts.addAll(posts);
+        this.temp.addAll(posts);
         notifyDataSetChanged();
     }
 
@@ -63,13 +65,32 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
     public void removePost(Post post) {
         this.posts.remove(post);
+        this.temp.remove(post);
         notifyDataSetChanged();
     }
 
     public void updatePost(Post post) {
         int index = posts.indexOf(post);
         posts.set(index, post);
+        int tempIndex = posts.indexOf(post);
+        temp.set(tempIndex, post);
         notifyItemChanged(index);
+    }
+
+    public void searchPost(String toString) {
+        temp.clear();
+        if (posts != null) {
+            if (toString.isEmpty()) {
+                temp.addAll(posts);
+            } else {
+                for (Post post : posts) {
+                    if (post.getTitle().toLowerCase().contains(toString)) {
+                        temp.add(post);
+                    }
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     public interface OnAction {

@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -43,6 +46,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
     private Thread thread;
     private List<Post> posts = new ArrayList<>();
     private SlidingDrawableTabLayout tablayout;
+    private EditText searchEdt;
 
     @Nullable
     @Override
@@ -58,6 +62,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
         progressBar = view.findViewById(R.id.progress_bar);
         tablayout = view.findViewById(R.id.tablayout);
         adapter = new PostAdapter(this);
+        searchEdt = view.findViewById(R.id.query_edt);
         rcv.setAdapter(adapter);
         if (!TextUtils.isEmpty(searchQuery)) {
             getPost(searchQuery);
@@ -105,6 +110,26 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
             @Override
             public void onTabReselected(SlidingDrawableTabLayout.Tab tab) {
 
+            }
+        });
+
+        searchEdt.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(adapter != null){
+                    adapter.searchPost(s.toString());
+                }
             }
         });
         getPost("Android");
