@@ -35,7 +35,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onStart();
         ConnectivityManager cn = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo nf = cn.getActiveNetworkInfo();
-        if (nf.isConnected()) {
+        if (nf != null && nf.isConnected()) {
             webview.loadUrl(post.getUrl());
         } else {
             webview.loadDataWithBaseURL("", post.getHtml(), "text/html; charset=utf-8", "utf-8", "");

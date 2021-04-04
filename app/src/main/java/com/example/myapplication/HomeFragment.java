@@ -13,8 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -22,6 +20,7 @@ import com.example.myapplication.api.DownloadWeb;
 import com.example.myapplication.api.RetrofitBuilder;
 import com.example.myapplication.data.Post;
 import com.example.myapplication.data.PostResponse;
+import com.legendmohe.slidingdrawabletablayout.SlidingDrawableTabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,13 +37,12 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
 
     private String searchQuery;
     private RecyclerView rcv;
-    private EditText queryEdt;
-    private Button searchBtn;
     private ProgressBar progressBar;
     private PostAdapter adapter;
     private Handler handler;
     private Thread thread;
     private List<Post> posts = new ArrayList<>();
+    private SlidingDrawableTabLayout tablayout;
 
     @Nullable
     @Override
@@ -57,24 +55,17 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         rcv = view.findViewById(R.id.post_rv);
-        queryEdt = view.findViewById(R.id.query_edt);
-        searchBtn = view.findViewById(R.id.btn_search);
         progressBar = view.findViewById(R.id.progress_bar);
-        queryEdt.setText("");
-        searchBtn.setOnClickListener(view1 -> {
-            String query = queryEdt.getText().toString();
-            if (TextUtils.isEmpty(query)) {
-                if (adapter != null) {
-                    adapter.updateData(new ArrayList<>());
-                }
-            }
-            getPost(query);
-        });
+        tablayout = view.findViewById(R.id.tablayout);
         adapter = new PostAdapter(this);
         rcv.setAdapter(adapter);
         if (!TextUtils.isEmpty(searchQuery)) {
             getPost(searchQuery);
         }
+        tablayout.addTab(tablayout.newTab().setText("Android"));
+        tablayout.addTab(tablayout.newTab().setText("IOS"));
+        tablayout.addTab(tablayout.newTab().setText("Machine Learning"));
+        tablayout.addTab(tablayout.newTab().setText("Artificial Intelligence"));
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -100,6 +91,23 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
                 }
             }
         };
+        tablayout.setOnTabSelectedListener(new SlidingDrawableTabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(SlidingDrawableTabLayout.Tab tab) {
+                getPost(tab.getText().toString());
+            }
+
+            @Override
+            public void onTabUnselected(SlidingDrawableTabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(SlidingDrawableTabLayout.Tab tab) {
+
+            }
+        });
+        getPost("Android");
     }
 
     private void storeDatabase(Post post) {
@@ -168,7 +176,6 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
     public void onStop() {
         super.onStop();
         Log.d("Home", "onStop: ");
-        ((MainActivity) getActivity()).setQuery(queryEdt.getText().toString());
     }
 
     public void setSearchQuery(String searchQuery) {
