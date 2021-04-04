@@ -232,7 +232,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
     public void onClick(Post post) {
         ConnectivityManager cn = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo nf = cn.getActiveNetworkInfo();
-        if (!nf.isConnected() && TextUtils.isEmpty(post.getHtml())) {
+        if ((nf == null || !nf.isConnected()) && TextUtils.isEmpty(post.getHtml())) {
             Toast.makeText(getContext(), "Không có kết nối mạng và không có dữ liệu offline", Toast.LENGTH_LONG).show();
         } else {
             Intent intent = new Intent(getContext(), DetailActivity.class);
