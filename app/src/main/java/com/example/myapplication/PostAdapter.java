@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -143,6 +144,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         private CheckBox favorite;
         private RequestOptions requestOptions;
         private ImageView bookMark;
+        private Button hide;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -152,6 +154,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             time = itemView.findViewById(R.id.date_time);
             favorite = itemView.findViewById(R.id.favorite);
             bookMark = itemView.findViewById(R.id.bookmark);
+            hide = itemView.findViewById(R.id.hide);
             requestOptions = new RequestOptions();
             requestOptions = requestOptions.transforms(new CenterCrop(), new RoundedCorners(16));
         }
@@ -182,6 +185,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             itemView.setOnClickListener(v -> onAction.onClick(post));
             title.setOnClickListener(v -> onAction.onClick(post));
             content.setOnClickListener(v -> onAction.onClick(post));
+            hide.setOnClickListener(v -> {
+                temp.remove(post);
+                posts.remove(post);
+                notifyDataSetChanged();
+            });
         }
     }
 }

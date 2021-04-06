@@ -37,6 +37,7 @@ import java.util.Locale;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
@@ -57,6 +58,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
     private TextView selectedDateTv;
     private Button selectDateBtn;
     private Calendar date;
+    private Button hide;
 
     @Nullable
     @Override
@@ -77,6 +79,7 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
         selectDateBtn = view.findViewById(R.id.date_view);
         searchEdt = view.findViewById(R.id.query_edt);
         rcv.setAdapter(adapter);
+        rcv.setLayoutManager(new GridLayoutManager(getContext(), 2));
         if (!TextUtils.isEmpty(searchQuery)) {
             getPost(searchQuery);
         }
