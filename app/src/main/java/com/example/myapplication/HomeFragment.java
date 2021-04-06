@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -15,8 +16,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myapplication.api.DownloadWeb;
@@ -25,12 +28,16 @@ import com.example.myapplication.data.Post;
 import com.example.myapplication.data.PostResponse;
 import com.legendmohe.slidingdrawabletablayout.SlidingDrawableTabLayout;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,6 +54,9 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
     private List<Post> posts = new ArrayList<>();
     private SlidingDrawableTabLayout tablayout;
     private EditText searchEdt;
+    private TextView selectedDateTv;
+    private Button selectDateBtn;
+    private Calendar date;
 
     @Nullable
     @Override
@@ -63,14 +73,34 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
         tablayout = view.findViewById(R.id.tablayout);
         adapter = new PostAdapter(this);
         searchEdt = view.findViewById(R.id.query_edt);
+        selectedDateTv = view.findViewById(R.id.date_selected);
+        selectDateBtn = view.findViewById(R.id.date_view);
+        searchEdt = view.findViewById(R.id.query_edt);
         rcv.setAdapter(adapter);
         if (!TextUtils.isEmpty(searchQuery)) {
             getPost(searchQuery);
         }
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                Toast.makeText(getActivity(), "on Move", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                int position = viewHolder.getAdapterPosition();
+                adapter.removePost(position);
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rcv);
         tablayout.addTab(tablayout.newTab().setText("Android"));
         tablayout.addTab(tablayout.newTab().setText("IOS"));
         tablayout.addTab(tablayout.newTab().setText("Machine Learning"));
         tablayout.addTab(tablayout.newTab().setText("Artificial Intelligence"));
+        date = Calendar.getInstance();
         handler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
@@ -127,10 +157,22 @@ public class HomeFragment extends Fragment implements PostAdapter.OnAction {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(adapter != null){
+                if (adapter != null) {
                     adapter.searchPost(s.toString());
                 }
             }
+        });
+        selectDateBtn.setOnClickListener(v -> {
+            DatePickerDialog dialog = new DatePickerDialog(getContext(), (view1, year, month, dayOfMonth) -> {
+
+                date.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                date.set(Calendar.YEAR, year);
+                date.set(Calendar.MONTH, month);
+                adapter.filter(date);
+                SimpleDateFormat format = new SimpleDateFormat("dd:MM:yyyy", Locale.getDefault());
+                selectedDateTv.setText(format.format(date.getTime()));
+            }, date.get(Calendar.YEAR), date.get(Calendar.MONTH), date.get(Calendar.DAY_OF_MONTH));
+            dialog.show();
         });
         getPost("Android");
     }

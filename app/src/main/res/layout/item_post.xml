@@ -19,7 +19,7 @@
             android:layout_height="60dp"
             android:scaleType="fitXY"
             android:src="@drawable/abc"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -31,8 +31,8 @@
             android:textColor="#2196F3"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/favorite"
-            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintEnd_toStartOf="@id/image"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/image"
             tools:text="Tran Hoang" />
 
@@ -46,8 +46,8 @@
             android:maxLines="5"
             android:textColor="@color/black"
             android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@id/favorite"
-            app:layout_constraintStart_toEndOf="@id/image"
+            app:layout_constraintEnd_toStartOf="@id/image"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:text="aoweifjaowef" />
 
@@ -55,17 +55,18 @@
             android:id="@+id/favorite"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:layout_marginTop="5dp"
             android:button="@drawable/checkbox_favorite"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintLeft_toLeftOf="@+id/image"
+            app:layout_constraintTop_toBottomOf="@id/image" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/bookmark"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginTop="12dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/favorite"
+            android:layout_marginTop="5dp"
+            app:layout_constraintRight_toRightOf="@+id/image"
+            app:layout_constraintTop_toBottomOf="@id/image"
             app:srcCompat="@drawable/ic_down_arrow" />
 
         <androidx.appcompat.widget.AppCompatTextView

@@ -14,8 +14,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.data.Post;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,6 +54,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     public void updateData(List<Post> posts) {
         if (posts == null) return;
         this.posts.clear();
+        this.temp.clear();
         this.posts.addAll(posts);
         this.temp.addAll(posts);
         notifyDataSetChanged();
@@ -90,6 +95,33 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 }
             }
         }
+        notifyDataSetChanged();
+    }
+
+    public void removePost(int position) {
+        Post post = temp.remove(position);
+        posts.remove(post);
+        notifyDataSetChanged();
+    }
+
+    public void filter(Calendar date) {
+        temp.clear();
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'", Locale.getDefault());
+            for (Post post : posts) {
+                Date time = format.parse(post.getPublishedAt());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(time);
+                if (date.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
+                        && date.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)
+                        && date.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH)) {
+                    temp.add(post);
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
         notifyDataSetChanged();
     }
 

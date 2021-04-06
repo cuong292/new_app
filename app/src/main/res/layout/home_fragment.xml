@@ -18,6 +18,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/date_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Chọn ngày để lọc"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/query_edt" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/date_selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/primary"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/date_view"
+        app:layout_constraintLeft_toRightOf="@id/date_view"
+        app:layout_constraintTop_toTopOf="@id/date_view" />
+
     <com.legendmohe.slidingdrawabletablayout.SlidingDrawableTabLayout
         android:id="@+id/tablayout"
         android:layout_width="0dp"
@@ -25,7 +44,7 @@
         android:layout_margin="5dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/query_edt"
+        app:layout_constraintTop_toBottomOf="@+id/date_view"
         app:slidingBackground="@drawable/tab_drawable"
         app:tabBackground="@android:color/transparent"
         app:tabSelectedTextColor="@android:color/white"
